@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Exiled.API.Interfaces;
 using PlayerRoles;
@@ -31,10 +31,13 @@ namespace RadioFrequency
             }
         };
 
+		[Description("The centered text (header) of the category.")]
+		public int SettingHeaderId { get; set; } = 101;
+
         [Description("The centered text (header) of the category.")]
         public string SettingHeaderLabel { get; set; } = "RadioFrequency";
 
-        [Description("The unique id of the setting.")]
+		[Description("The unique id of the setting.")]
         public int KeybindId { get; set; } = 201;
 
         [Description("The keybind label.")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Exiled.API.Features;
 using Exiled.API.Features.Core.UserSettings;
@@ -15,8 +15,8 @@ namespace RadioFrequency
 
         public override string Name { get; } = "RadioFrequency";
         public override string Author { get; } = "Bolton";
-        public override Version Version { get; } = new(1, 0, 1);
-        public override Version RequiredExiledVersion { get; } = new(9, 0, 0);
+        public override Version Version { get; } = new(1, 1, 0);
+        public override Version RequiredExiledVersion { get; } = new(9, 13, 0);
 
         public static Plugin Singleton { get; private set; }
 
@@ -39,7 +39,7 @@ namespace RadioFrequency
 
             _settings = new SettingBase[]
             {
-                new HeaderSetting(Config.SettingHeaderLabel),
+                new HeaderSetting(Config.SettingHeaderId, Config.SettingHeaderLabel),
                 new KeybindSetting(Config.KeybindId, Config.KeybindLabel, default, hintDescription: Config.KeybindHint),
             };
             SettingBase.Register(_settings);
@@ -55,7 +55,7 @@ namespace RadioFrequency
             _harmony.UnpatchAll(_harmony.Id);
             _harmony = null;
 
-            SettingBase.Unregister(null, _settings);
+            SettingBase.Unregister((Func<Player, bool>)null, _settings);
             _settings = null;
 
             EventHandlers.UnregisterEvents();

@@ -35,7 +35,7 @@ namespace RadioFrequency
 		public int SettingHeaderId { get; set; } = 101;
 
         [Description("The centered text (header) of the category.")]
-        public string SettingHeaderLabel { get; set; } = "RadioFrequency";
+        public string SettingHeaderLabel { get; set; } = "Radio Frequency";
 
 		[Description("The unique id of the setting.")]
         public int KeybindId { get; set; } = 201;

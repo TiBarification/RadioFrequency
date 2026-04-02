@@ -38,9 +38,8 @@
   
   <ItemGroup>
     <PackageReference Include="ExMod.Exiled" Version="9.13.3" />
-    <PackageReference Include="Lib.Harmony" Version="2.3.5" />
   </ItemGroup>
   <Target Condition=" $(OS) == 'Windows_NT' " Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy $(TargetPath) &quot;$(USERPROFILE)\AppData\Roaming\EXILED\Plugins\plugins&quot;" />
+    <Exec Command="copy $(TargetPath) &quot;$(APPDATA)\EXILED\Plugins&quot;" />
   </Target>
 </Project>

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.Events.EventArgs.Player;
+using LabApi.Events.Arguments.PlayerEvents;
 using RadioFrequency.Features;
 using UserSettings.ServerSpecific;
+using VoiceChat;
 
 namespace RadioFrequency
 {
@@ -17,16 +19,35 @@ namespace RadioFrequency
             Exiled.Events.Handlers.Player.ItemAdded += OnItemAdded;
             Exiled.Events.Handlers.Player.ItemRemoved += OnItemRemoved;
             ServerSpecificSettingsSync.ServerOnSettingValueReceived += OnSettingValueReceived;
-        }
+			LabApi.Events.Handlers.PlayerEvents.ReceivingVoiceMessage += ReceivingVoiceMessage;
+		}
 
-        internal static void UnregisterEvents()
+		private static void ReceivingVoiceMessage(PlayerReceivingVoiceMessageEventArgs ev)
+		{
+			var channel = ev.Message.Channel;
+			if (channel != VoiceChatChannel.Radio)
+				return;
+
+			Player speakerPlayer = Player.Get(ev.Sender);
+			Player targetPlayer = Player.Get(ev.Player);
+
+			if (Frequency.TryGetPlayerFrequency(speakerPlayer, out Frequency frequency) && frequency.Players.Contains(targetPlayer))
+			{
+				ev.IsAllowed = true;
+				return;
+			}
+			ev.IsAllowed = false;
+		}
+
+		internal static void UnregisterEvents()
         {
             Exiled.Events.Handlers.Server.WaitingForPlayers -= OnWaitingForPlayers;
             Exiled.Events.Handlers.Player.Left -= OnLeft;
             Exiled.Events.Handlers.Player.ItemAdded -= OnItemAdded;
             Exiled.Events.Handlers.Player.ItemRemoved -= OnItemRemoved;
             ServerSpecificSettingsSync.ServerOnSettingValueReceived -= OnSettingValueReceived;
-        }
+			LabApi.Events.Handlers.PlayerEvents.ReceivingVoiceMessage -= ReceivingVoiceMessage;
+		}
 
         private static void OnWaitingForPlayers()
         {

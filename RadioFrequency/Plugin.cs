@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Exiled.API.Features;
 using Exiled.API.Features.Core.UserSettings;
-using HarmonyLib;
 using PlayerRoles;
 using RadioFrequency.Features;
 
@@ -10,11 +9,10 @@ namespace RadioFrequency
 {
     public class Plugin : Plugin<Config>
     {
-        private Harmony _harmony;
         private IEnumerable<SettingBase> _settings;
 
         public override string Name { get; } = "RadioFrequency";
-        public override string Author { get; } = "Bolton";
+        public override string Author { get; } = "Bolton & TiBarification";
         public override Version Version { get; } = new(1, 1, 0);
         public override Version RequiredExiledVersion { get; } = new(9, 13, 0);
 
@@ -23,8 +21,6 @@ namespace RadioFrequency
         public override void OnEnabled()
         {
             Singleton = this;
-            _harmony = new Harmony("fr.bolton.radiofrequency");
-            _harmony.PatchAll();
 
             if (Config.UseDefaultRadio)
             {
@@ -37,11 +33,11 @@ namespace RadioFrequency
                 frequency.Init();
             }
 
-            _settings = new SettingBase[]
-            {
-                new HeaderSetting(Config.SettingHeaderId, Config.SettingHeaderLabel),
+            _settings =
+			[
+				new HeaderSetting(Config.SettingHeaderId, Config.SettingHeaderLabel),
                 new KeybindSetting(Config.KeybindId, Config.KeybindLabel, default, hintDescription: Config.KeybindHint),
-            };
+            ];
             SettingBase.Register(_settings);
 
             EventHandlers.RegisterEvents();
@@ -52,8 +48,6 @@ namespace RadioFrequency
         public override void OnDisabled()
         {
             Singleton = null;
-            _harmony.UnpatchAll(_harmony.Id);
-            _harmony = null;
 
             SettingBase.Unregister((Func<Player, bool>)null, _settings);
             _settings = null;
